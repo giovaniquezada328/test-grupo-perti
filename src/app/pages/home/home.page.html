@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar hideBackButton="true"  color="primary">
+
+    <ion-title>Peliculas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-searchbar #mySearchbar  animated="true" (ionChange)="getItems($event)" placeholder="Buscar..">
+        </ion-searchbar>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list *ngIf="!search">
+    <ion-item *ngFor="let movie of moviesList" (click)="navigate(movie._embedded.show)">
+      <ion-thumbnail slot="start">
+        <ng-container *ngIf="movie._embedded.show.image;else default">
+          <img [src]="movie._embedded.show.image.medium" />
+        </ng-container>
+        <ng-template #default>
+            <ng-container>
+                      <img src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+            </ng-container>
+        </ng-template>
+
+      </ion-thumbnail>
+      <ion-label>
+        {{ movie._embedded.show.name }}
+        <p>{{ movie._embedded.show.genres[0] }}</p>
+        <p>{{ movie.name }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="search">
+    <ion-item *ngFor="let movie of movieSearch" (click)="navigate(movie.show)">
+      <ion-thumbnail slot="start">
+        <ng-container *ngIf="movie.show.image;else default">
+          <img [src]="movie.show.image.medium" />
+        </ng-container>
+        <ng-template #default>
+            <ng-container>
+                      <img src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+            </ng-container>
+        </ng-template>
+
+      </ion-thumbnail>
+      <ion-label>
+        {{ movie.show.name }}
+        <p>{{ movie.show.genres[0] }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

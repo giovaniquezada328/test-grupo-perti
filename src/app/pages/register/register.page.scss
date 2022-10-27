@@ -1,0 +1,20 @@
+ion-grid{
+  max-width: 960px;
+}
+
+ion-img {
+  width: 40%;
+  display: block;
+  margin: 0 auto;
+  // margin-top: 4em;
+  // padding-bottom: 2em;
+}
+
+.login-btn {
+  width: 35%;
+  display: block;
+  margin: 20px auto;
+  border-radius: 5px;
+  height: 2.4rem;
+  background-color: var(--ion-color-primary);
+  }

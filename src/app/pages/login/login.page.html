@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar hideBackButton="true" color="primary">
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-img class="logo" src="../../../assets/img/logo.png"></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="user" >
+          <ion-row>
+            <ion-col col-12>
+              <ion-item>
+                <ion-label position="floating">Correo Electrónico</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-12>
+              <ion-item>
+                <ion-label position="floating">Contraseña</ion-label>
+                <ion-input type="password" formControlName="password"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-12>
+              <ion-buttons>
+                <ion-button  style="text-transform: inherit; margin: auto;" color="primary" href="/recovery-password" >Recuperar Contraseña</ion-button>
+              </ion-buttons>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6>
+              <ion-button color="primary" class="login-btn" (click)="onRegister()">Registrarse</ion-button>
+            </ion-col>
+            <ion-col col-6>
+              <ion-button color="primary" class="login-btn"
+                [disabled]="!user.valid" (click)="onLogin()">Acceder</ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

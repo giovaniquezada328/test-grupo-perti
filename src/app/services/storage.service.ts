@@ -29,28 +29,20 @@ export class StorageService {
       const users = await this._storage.get('users');
       // eslint-disable-next-line no-underscore-dangle
       this._localUsers = users || [];
-      // eslint-disable-next-line no-underscore-dangle
-      console.log(this._localUsers);
     } catch (error) {
 
     }
   }
 
   async saveUser(user: LoginUser){
-    console.log(user);
     // eslint-disable-next-line no-underscore-dangle
     const exists = this._localUsers.find(localUser => localUser.username === user.username);
-    console.log(exists);
     if(exists){
-      // eslint-disable-next-line no-underscore-dangle
-      // this._localUsers =  this._localUsers.filter(localUser => localUser.username !== user.username);
       return false;
     } else {
       // eslint-disable-next-line no-underscore-dangle
       this._localUsers = [user, ...this._localUsers];
     }
-    // eslint-disable-next-line no-underscore-dangle
-    console.log(this._localUsers);
     // eslint-disable-next-line no-underscore-dangle
     this._storage.set('users', this._localUsers );
     return true;

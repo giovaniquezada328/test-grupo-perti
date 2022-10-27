@@ -15,7 +15,7 @@
     </ion-row>
   </ion-grid>
   <ion-list *ngIf="!search">
-    <ion-item *ngFor="let movie of moviesList" (click)="navigate(movie._embedded.show)">
+    <ion-item *ngFor="let movie of moviesListTemp" (click)="navigate(movie._embedded.show)">
       <ion-thumbnail slot="start">
         <ng-container *ngIf="movie._embedded.show.image;else default">
           <img [src]="movie._embedded.show.image.medium" />
@@ -54,4 +54,11 @@
       </ion-label>
     </ion-item>
   </ion-list>
+  <ion-infinite-scroll
+    threshold="25%"
+    position="bottom"
+    (ionInfinite)="loadData()">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

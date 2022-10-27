@@ -28,7 +28,6 @@ export class RegisterPage implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    console.log(this.platform.is('capacitor'));
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [ Validators.required, Validators.email]],
@@ -40,17 +39,10 @@ export class RegisterPage implements OnInit {
 
   async onRegister(){
     const formData = this.registerForm.getRawValue();
-    console.log(formData);
+    formData.registrationDate =  new Date()
     const register = await this.storageService.saveUser(formData);
-    console.log(register);
     if(register){
       if(this.platform.is('capacitor')){
-        // this.localNotifications.schedule({
-        //   id: 1,
-        //   text: 'Registrado Correctamente',
-        //   // sound: isAndroid? 'file://sound.mp3': 'file://beep.caf',
-        //   // data: { secret: key }
-        // });
         this.localNotificationsService.showLocalNotification(
           'Registro',
           'Se registro exitosamente',
@@ -66,13 +58,10 @@ export class RegisterPage implements OnInit {
   fillDataDummy(){
     this.registerService.dataDummy().subscribe({
       next: async (res) => {
-        console.log(res);
-        // const dataDeserialize: any = await this.jsonapiSerializerService.deserializeJson(res.body);
         this.registerForm.patchValue({
           name: `${res.results[0].name.title} ${res.results[0].name.first} ${res.results[0].name.last}`,
           email: res.results[0].email,
           username: res.results[0].login.username,
-          // password: res.results[0].login.password,
         });
 
       },

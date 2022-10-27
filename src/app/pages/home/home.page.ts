@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { Embedded, Movie, Show } from '../../interfaces/movie';
 import { DetailPage } from './detail/detail.page';
 import { HomeService } from './home.service';
@@ -10,9 +10,13 @@ import { HomeService } from './home.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+  @ViewChild(IonInfiniteScroll, { static: true }) infiniteScroll: IonInfiniteScroll;
   moviesList: Movie[] = [];
+  moviesListTemp: Movie[] = [];
   movieSearch: Embedded[]= [];
   search = false;
+  indexMin = 0;
+  indexMax = 100;
   constructor(private homeService: HomeService, public loadingController: LoadingController,
     public modalController: ModalController) {}
 
@@ -26,20 +30,21 @@ export class HomePage implements OnInit {
   }
 
   fillData(){
-    this.homeService.list().subscribe({
-      next: async (res) => {
-        console.log(res);
-        this.moviesList.push(...res);
-        this.loadingController.dismiss();
-      },
-      error: err => console.log(err)
-    });
-    // this.homeService.list().subscribe( movies => this.moviesList.push(...movies));
-
+    if(this.moviesListTemp.length === 0){
+      this.homeService.list().subscribe({
+        next: async (res) => {
+          this.moviesList.push(...res);
+          let transform = this.paginate(this.moviesList);
+          this.moviesListTemp.push(... transform);
+          this.sumIndex();
+          this.loadingController.dismiss();
+        },
+        error: err => console.log(err)
+      });
+    }
   }
 
   async navigate(movie: Show){
-    console.log(movie);
     await this.presentModal(movie);
   }
 
@@ -67,29 +72,61 @@ export class HomePage implements OnInit {
       cssClass: 'my-custom-class',
       message: 'Cargando...',
     });
-    await loading.present();
+    
     const val = ev.target.value;
-    // console.log(val.length, val);
     if (val.length > 1){
+      await loading.present();
       this.search = true;
       this.homeService.searchLike(val).subscribe({
         next: async (res) => {
-          console.log(res);
           this.movieSearch = [];
           this.movieSearch.push(...res);
-          console.log(this.movieSearch);
           this.loadingController.dismiss();
         },
-        error: err => console.log(err)
+        error: err => {
+          console.log(err);
+          this.loadingController.dismiss();
+        }
       }
       );
     } else if (val.length === 0){
       this.movieSearch = [];
-      this.moviesList = [];
-      this.fillData();
+      // this.moviesList = [];
+      // this.moviesListTemp = [];
+      // this.fillData();
       this.search = false;
+
+    }
+    if(this.loadingController){
       this.loadingController.dismiss();
     }
+    
   }
+
+
+  paginate = function (array) {
+    return array.filter(
+      (x, index) => index >= this.indexMin && index < this.indexMax
+    );
+    
+  }
+
+  sumIndex(){
+    this.indexMin = this.indexMax;
+    this.indexMax+=100;
+  }
+
+  loadData(){
+    if(this.moviesList.length === this.moviesListTemp.length){
+      this.infiniteScroll.disabled = true;
+      return;
+    }
+
+    let transform = this.paginate(this.moviesList);
+    this.moviesListTemp.push(... transform);
+    this.sumIndex();
+    this.infiniteScroll.complete();
+  }
+
 
 }

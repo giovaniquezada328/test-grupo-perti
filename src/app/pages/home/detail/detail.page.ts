@@ -11,9 +11,7 @@ export class DetailPage implements OnInit {
   movie: Show = this.navParams.get('movie');
   constructor( private navParams: NavParams, private modalController: ModalController,) { }
 
-  ngOnInit() {
-    console.log(this.movie);
-  }
+  ngOnInit() {  }
 
   async dismissModal(){
     await this.modalController.dismiss(null);
